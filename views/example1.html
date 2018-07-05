@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<meta charset="UTF-8">
+		<title>Example 1</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/javascript" src="js/three.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="styles/styles.css" media="screen">
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript">
+		// Create the three.js scene
+		var scene = new THREE.Scene();
+
+		// Create the renderer for the scene
+		var renderer = new THREE.WebGLRenderer({ antialias: true });
+		
+		// Set the renderers size
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
+		// Set the background color of the renderer. Create a custom color with a Hex value.
+        renderer.setClearColor(new THREE.Color("#4099FF"));
+
+        // Append the renderer to the document
+		document.body.appendChild(renderer.domElement);
+
+		// Create a camera, in this case a perspective camera
+		var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+		// Set the x/y/z position of the camera
+		camera.position.x = 1;
+		camera.position.y = 1;
+		camera.position.z = 2;
+
+		// Set the location  x/y/z position the camera should look at
+		camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+		// Create a directional light so objects in the scene can be seen
+		var directionalLight = new THREE.DirectionalLight(new THREE.Color("#FFFFFF"), 1.0); 
+
+		// Set the x/y/z poition of the directional light
+		directionalLight.position.set(0, 1, 3); 
+
+		// Add the light to the scene
+		scene.add(directionalLight);
+
+		// Create a box geometry using the three.js object
+		var boxGeometry = new THREE.BoxGeometry( 1, 1, 1 );
+
+		// Create a mesh for the object. Different materials have different properties. 
+		//MeshLabertMaterial is pretty basic but affected by light.
+		var boxMaterial = new THREE.MeshLambertMaterial({
+			color: new THREE.Color("#FEFEFE"), 
+			side:THREE.DoubleSide 
+		});
+
+		// Create the box mesh using the geometry and material
+		var boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+
+		// Add the box to the scene
+		scene.add(boxMesh);
+
+		// Creates the render function and this will call itself recursively
+		var render = function () {
+			requestAnimationFrame( render );
+			
+			renderer.render(scene, camera);
+		};
+
+		// Starts the rendering
+		render();
+
+		// Add a resize event to the window so the scene resizes if the window changs size
+		window.addEventListener( 'resize', function() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+		    camera.updateProjectionMatrix();
+
+		    renderer.setSize(window.innerWidth, window.innerHeight);
+		}, false);
+	</script>
+</html>
